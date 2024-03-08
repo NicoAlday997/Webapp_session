@@ -14,7 +14,7 @@ Carro carro =(Carro) session.getAttribute("carro");
 <p>Lo sentimos no hay productos en el carro de compras!</p>
 <%}else{%>
 
-<form name="formcarro" action="<%=request.getContextPath()%>/actualizar-carro" method="post">
+<form name="formcarro" action="<%=request.getContextPath()%>/carro/actualizar" method="post">
 <table>
     <tr>
         <th>id</th>
