@@ -1,87 +1,73 @@
-<%@ page import="java.util.List" %>
-<%@ page import="org.aguzman.apiservlet.webapp.headers.models.Categoria" %>
-<%@ page import="java.util.Map" %>
-<%@ page import="org.aguzman.apiservlet.webapp.headers.models.Producto" %>
+
 <%@ page import="java.time.format.DateTimeFormatter" %>
-<%
-    List<Categoria> categorias = (List<Categoria>) request.getAttribute("categorias");
-    Map<String, String> errores = (Map<String, String>) request.getAttribute("errores");
-    Producto producto= (Producto) request.getAttribute("producto");
-    String fecha=producto.getFechaRegistro() != null?
-    producto.getFechaRegistro().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")): "";
- %>
-<%--
-  Created by IntelliJ IDEA.
-  User: alday
-  Date: 18/03/2024
-  Time: 09:40 p. m.
-  To change this template use File | Settings | File Templates.
---%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html>
-<head>
-    <title>Formulario productos</title>
-</head>
-<body>
-<h1>Formulario productos</h1>
-<form action="<%=request.getContextPath()%>/productos/form" method="post">
-    <div>
-        <label for="nombre">Nombre</label>
-        <div>
-            <input type="text" name="nombre" id="nombre" value="<%=producto.getNombre() != null? producto.getNombre() : ""%>">
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+<%@ page contentType="text/html;charset=UTF-8" %>
+<jsp:include page="layout/header.jsp"/>
+<h3>${title}</h3>
+<form action="${pageContext.request.contextPath}/productos/form" method="post">
+    <div class="row mb-2">
+        <label for="nombre" class="col-form-label col-sm-2">Nombre</label>
+        <div class="col-sm-4">
+            <input type="text" name="nombre" id="nombre" value="${producto.nombre}" class="form-control">
         </div>
-        <%if(errores != null && errores.containsKey("nombre")){%>
-            <div style="color:red;"><%=errores.get("nombre")%></div>
-        <% } %>
+        <c:if test="${errores != null && errores.containsKey('nombre')}">
+            <div style="color:red;">${errores.nombre}</div>
+        </c:if>
+
     </div>
 
-<div>
-    <label for="precio">Precio</label>
-    <div>
-        <input type="number" name="precio" id="precio" value="<%=producto.getPrecio() != 0? producto.getPrecio() : ""%>">
+<div class="row mb-2">
+    <label for="precio" class="col-form-label col-sm-2">Precio</label>
+    <div class="col-sm-4">
+        <input type="number" name="precio" id="precio" value="${producto.precio > 0? producto.precio: ""}" class="form-control">
     </div>
-    <%if(errores != null && errores.containsKey("precio")){%>
-    <div style="color:red;"><%=errores.get("precio")%></div>
-    <% } %>
+    <c:if test="${errores != null && not empty errores.precio}">
+        <div style="color:red;">${errores.precio}</div>
+    </c:if>
 </div>
 
-<div>
-    <label for="sku">Sku</label>
-    <div>
-        <input type="text" name="sku" id="sku" value="<%=producto.getSku() != null? producto.getSku() : ""%>">
+<div class="row mb-2">
+    <label for="sku" class="col-form-label col-sm-2">Sku</label>
+    <div class="col-sm-4">
+        <input type="text" name="sku" id="sku" value="${producto.sku}" class="form-control">
     </div>
-    <%if(errores != null && errores.containsKey("sku")){%>
-    <div style="color:red;"><%=errores.get("sku")%></div>
-    <% } %>
+    <c:if test="${errores != null && not empty errores.sku}">
+        <div style="color:red;">${errores.sku}</div>
+    </c:if>
 </div>
 
-<div>
-    <label for="fecha_registro">Fecha Registro</label>
-    <div>
-        <input type="date" name="fecha_registro" id="fecha_registro" value="<%=fecha%>">
+<div class="row mb-2">
+    <label for="fecha_registro" class="col-form-label col-sm-2">Fecha Registro</label>
+    <div class="col-sm-4">
+        <input class="form-control" type="date" name="fecha_registro" id="fecha_registro" value="${producto.fechaRegistro != null? producto.fechaRegistro.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")): ""}">
     </div>
-    <%if(errores != null && errores.containsKey("fecha_registro")){%>
-    <div style="color:red;"><%=errores.get("fecha_registro")%></div>
-    <% } %>
+    <c:if test="${errores != null && not empty errores.fecha_registro}">
+        <div style="color:red;">${errores.fecha_registro}</div>
+    </c:if>
 </div>
 
-<div>
-    <label for="categoria">Categoria</label>
-    <div>
-        <select name="categoria" id="categoria">
+<div class="row mb-2">
+    <label for="categoria" class="col-form-label col-sm-2">Categoria</label>
+    <div class="col-sm-4">
+        <select name="categoria" id="categoria" class="form-select">
             <option value="">--- seleccionar ---</option>
-            <% for(Categoria c: categorias){%>
-            <option value="<%=c.getId()%>" <%=c.getId().equals(producto.getCategoria().getId())? "selected" : ""%>><%=c.getNombre()%></option>
-            <%}%>
+            <c:forEach items="${categorias}" var="c">
+            <option value="${c.id}" ${c.id.equals(producto.categoria.id)? "selected": ""}>${c.nombre}</option>
+            </c:forEach>
         </select>
     </div>
-    <%if(errores != null && errores.containsKey("categoria")){%>
-    <div style="color:red;"><%=errores.get("categoria")%></div>
-    <% } %>
+    <c:if test="${errores != null && not empty errores.categoria}">
+        <div style="color:red;">${errores.categoria}</div>
+    </c:if>
 </div>
 
-<div><input type="submit" value="Crear"></div>
-</form>
+<div class="row mb-2">
+    <div>
+        <input class="btn btn-primary" type="submit" value="${producto.id!=null && producto.id>0? "Editar": "Crear"}">
+    </div>
+</div>
+    <input type="hidden" name="id" value="${producto.id}">
 
-</body>
-</html>
+</form>
+<jsp:include page="layout/footer.jsp"/>

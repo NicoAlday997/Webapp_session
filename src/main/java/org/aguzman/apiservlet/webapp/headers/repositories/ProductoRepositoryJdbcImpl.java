@@ -51,7 +51,6 @@ public class ProductoRepositoryJdbcImpl implements Repository<Producto> {
 
         String sql;
         boolean isUpdate = producto.getId() != null && producto.getId() > 0;
-        ;
 
         if (isUpdate) {
             sql = "update productos set nombre=?, precio=?, sku=?, categoria_id=? where id=?";

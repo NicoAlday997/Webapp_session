@@ -10,7 +10,7 @@ import org.aguzman.apiservlet.webapp.headers.services.LoginServiceSessionImpl;
 import java.io.IOException;
 import java.util.Optional;
 
-@WebFilter({"/carro/*"})
+@WebFilter({"/carro/*", "/productos/form/*", "/productos/eliminar/*", "/usuarios/form/*", "/usuarios/eliminar/*"})
 public class LoginFiltro implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
@@ -22,6 +22,8 @@ public class LoginFiltro implements Filter {
             ((HttpServletResponse)response).sendError(HttpServletResponse.SC_UNAUTHORIZED,
                     "Lo sentimos no estas autorizado para ingresar a esta página");
         }
+
+
 
     }
 }
